@@ -8,8 +8,24 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
+      redirect: '/dynamic'
+    },{
+      path: '/', component: () => import('@/components/HelloWorld.vue'),
+      children: [
+        {
+          path: '/dynamic',
+          name: 'Dynamic',
+          component: () => import('@/pages/dynamic.vue')
+        },{
+          path: '/static',
+          name: 'Static',
+          component: () => import('@/pages/static.vue')
+        },{
+          path: '/figure',
+          name: 'Figure',
+          component: () => import('@/pages/figure.vue')
+        }
+      ]
     }
   ]
 })
