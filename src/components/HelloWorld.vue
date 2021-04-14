@@ -1,6 +1,6 @@
 <template>
   <div>
-    
+    <button v-on:click="gotoTest">test mock data</button>
     <Navbar></Navbar>
     <router-view/>
   </div>
@@ -14,7 +14,7 @@ export default {
   name: 'HelloWorld',
   data() {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      msg: 'Welcome to Your Vue.js App',
     }
   },
   mounted() {
@@ -22,11 +22,14 @@ export default {
   },
   methods: {
      gotoTest()  {
-       var that = this;
-        console.log(that);
+      //  var that = this;
+      //   console.log(that);
       console.log('axios sent!');
-      axios.get('/api/s')
-        .then(res => console.log(res.data))
+      axios({
+        method: 'POST',
+        url: '/beginData',
+        data: this.inputData,
+      }).then(res => console.log(res.data))
         .catch(res => console.log(res.msg));
     }
   }
