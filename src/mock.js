@@ -6,6 +6,36 @@ import Mock from 'mockjs'
 // dst_port: '8009',
 // proto_type: 'TCP'
 
+// 流量统计信息
+const statData = {
+    details: {
+        'chart': 0.56,
+        'streaming': 0.22,
+        'p-to-p': 0.32,
+    },
+    total: 1000,
+}
+const listData = 
+    [{
+        Index: 1,
+        src_ip: '10.3.8.211', 
+        dst_ip: '112.5.4.432',
+        src_port: '3000',
+        dst_port: '8333',
+        proto_type: 'TCP',
+        classification: 'aaa',
+    },{
+        Index: 2,
+        src_ip: '102.111.33.4', 
+        dst_ip: '192.168.0.1',
+        src_port: '8490',
+        dst_port: '8000',
+        proto_type: 'UDP',
+        classification: 'bbb',
+    }
+]
+
+
 // 获取网络流量监控数据
 const searchData = {
 
@@ -25,7 +55,7 @@ const searchData = {
             dst_port: '8333',
             proto_type: 'TCP',
             classification: 'aaa',
-            time: new Date().getTime(),
         }]
 }
-Mock.mock('/beginData', 'post', searchData);
+Mock.mock('/getStatData', 'post', statData);
+Mock.mock('/getIPstream', 'post',listData);

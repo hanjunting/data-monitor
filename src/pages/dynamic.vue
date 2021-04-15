@@ -11,25 +11,38 @@
                 <el-option label="UDP协议" value="UDP"></el-option>
             </el-select>
         </div>
-        <button v-on:click="searchTest">test</button>
-        <div id="data-pie" style="height:500px"></div>
-        <div id="data-catagory" style="height:500px"></div>
-        <div id="data-table"></div>
+        <button v-on:click="startMonitor">test</button>
+        <button v-on:click="stop">stop</button>
+        <button v-on:click="reset">reset</button>
+        <div id="data-table">{{listData}}</div>
+        <div id="fig_pie" style="height:500px"></div>
+        <div id="fig_catagory" style="height:500px"></div>
+        
     </div>
 </template>
 
 <script>
-    import * as echarts from 'echarts'
-    import axios from 'axios';
+    // import * as echarts from 'echarts'
+    import Figure from '../figure/figure.js'
+    import { getStatData, getIPstream } from '../server/request.js'
+    import { 
+        pie_config, 
+        cata_config, 
+        pie_data_default, 
+        cata_data_default,
+        setPieData,
+        setCataData,
+        } from '../figure/fig_config.js'
+    
 
     export default {
             
         data() {
             return {
+                pie: null,
+                cata: null,
                 pieDomNode:null,
                 cataDomNode: null,
-                pieInstance: null,
-                cataInstance: null,
                 // 输入ip和端口信息
                 inputData: {
                     src_ip: '', 
@@ -38,124 +51,98 @@
                     dst_port: '',
                     proto_type: 'TCP'
                 },
+                timer: null,
                 // 饼图信息
-                pieData: [{value:0, name:'chart'},{value:0, name:'p-to-p'},{value:0, name:'streaming'}],
-                
-                // 饼图配置
-                pieOptionsDefault: {
-                    legend: {
-                        top: 'bottom'
-                    },
-                    toolbox: {
-                        show: true,
-                        feature: {
-                            mark: {show: true},
-                            dataView: {show: true, readOnly: false},
-                            restore: {show: true},
-                            saveAsImage: {show: true}
-                        }
-                    },
-                    series:[{
-                        name: '流量饼图',
-                        type: 'pie',
-                        radius: [0, 75],
-                        center: ['50%', '50%'],
-                        roseType: 'area',
-                        itemStyle: {
-                            borderRadius: 8
-                        },
-                        data:[]
-                    }],
-                },
+                pieData: [],
                 // 柱状图信息
-                catagoryData: {
-                    xAxis: ['chart', 'streaming', 'p-to-p'],
-                    series: [],
-                },
-                // 柱状图配置
-                catagoryOptionsDefault: {
-                    xAxis: {
-                        type: 'category',
-                        data: []
-                    },
-                    yAxis: {
-                        type: 'value'
-                    },
-                    series: [{
-                        data: [],
-                        type: 'bar'
-                    }]
-                }
+                catagoryData:[],
+                // 表格信息
+                listData: [],
             }
         },
         mounted() {
             // 初始化饼图
-            this.pieDomNode = document.getElementById("data-pie");
-            this.pieInstance = echarts.init(this.pieDomNode);
-            console.log(this.pieInstance);
-            this.pieOptionsDefault.series[0].data=this.pieData;
-            this.pieInstance.setOption(this.pieOptionsDefault);
-
+            const pieDomNode = document.getElementById("fig_pie");
+            this.pie = new Figure(pieDomNode, pie_config);
+            this.pie.setData(pie_data_default, setPieData);
             // 初始化柱形图
-            this.cataDomNode = document.getElementById("data-catagory");
-            console.log(this.cataDomNode);
-            this.cataInstance = echarts.init(this.cataDomNode);
-            console.log(this.cataInstance);
-            this.catagoryOptionsDefault.xAxis.data = this.catagoryData.xAxis;
-            this.catagoryOptionsDefault.series[0].data = this.catagoryData.series;
-            this.cataInstance.setOption(this.catagoryOptionsDefault);
+            const cataDomNode = document.getElementById("fig_catagory");
+            this.cata = new Figure(cataDomNode, cata_config);
+            this.cata.setData(cata_data_default, setCataData);
         },
         methods: {
-            searchTest() {
-                console.log('search!');
+            
 
-                // todo: 确认默认ip和默认端口
+            async startMonitor() {
+                await this.getMonitorState();
+                this.renderFigure();
+                await this.getTableData();
+            },
+
+            async getMonitorState() {
+                console.log('search!');
+                // TODO: 确认默认ip和默认端口
                 const {src_ip, dst_ip} = this.inputData;
                 if (src_ip && dst_ip) {
-                   try{
-                        axios({
-                            method: 'POST',
-                            url: '/beginData',
-                            data: this.inputData, 
-                        }).then(res => {
-                            console.log(res)
-                            const { status, data } = res;
-                            const {pie} = data;
-                            // const {data: pieData} = this.pieSeries;
-
-                            // 清空初始数据
-                            this.pieData=[];
-                            this.catagoryData.series=[];
-                            this.catagoryData.xAxis=[];
-
-                            // 监控数据
-                            if (status === 200) {
-                                Object.keys(pie.details).forEach(key => {
-                                    this.pieData.push({
-                                        value: pie.details[key]*100,
-                                        name: key
-                                    });
-                                    this.catagoryData.xAxis.push(key);
-                                    this.catagoryData.series.push(pie.details[key]*pie.total)
+                    try{
+                        const res = await getStatData(this.inputData);
+                        console.log('res----------',res);
+                        const { status, data } = res;
+                        const { details, total } = data;
+                        if (status === 200) {
+                            Object.keys(details).forEach(item => {
+                                this.pieData.push({
+                                    name: item,
+                                    value: details[item]*100
                                 });
-
-                                console.log('获得的饼/柱状图数据',this.pieData, this.catagoryData);
-                                this.pieOptionsDefault.series[0].data = this.pieData;
-                                this.pieInstance.setOption(this.pieOptionsDefault);
-                                this.catagoryOptionsDefault.xAxis.data = this.catagoryData.xAxis;
-                                this.catagoryOptionsDefault.series[0].data = this.catagoryData.series;
-                                this.cataInstance.setOption(this.catagoryOptionsDefault);
-                            }
-                        })
-                    } catch(e) {
-                        new Throw('查询ip流量失败');
+                                this.catagoryData.push({
+                                    name: item,
+                                    value: details[item]*total
+                                });
+                            })
+                        }
+                    }catch(e){
+                        console.log(e.message);
                     }
                 }else{ 
                     alert("请输入源ip和目标ip")
                 }
                 
+            },
+            renderFigure() {
+                this.pie.setData(this.pieData, setPieData);
+                this.cata.setData(this.catagoryData, setCataData);
+            },
+            async getTableData() {
+                const f = async() => {
+                    const res = await getIPstream(this.inputData);
+                    const { status, data } = res;
+                    // console.log(data)
+                        if (status === 200) {
+                            this.listData = this.listData.concat(data);
+                        } else {
+                            new Throw(status);
+                        }
+                    this.timer = setTimeout(() => {
+                        f();
+                    },1000)
+                }
+                await f();
+            },
+
+            stop() {
+                clearTimeout(this.timer);
+            },
+            reset() {
+                clearTimeout(this.timer);
+                this.listData = [];
+                console.log('reset',this.init_pie_data);
+                this.pie.setData(pie_data_default, setPieData);
+                this.cata.setData(cata_data_default, setCataData);
             }
+
         }
+
 
     }
 
