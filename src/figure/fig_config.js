@@ -1,44 +1,151 @@
 import { formateData } from '../utils/utils.js'
 // 数据图相关样式配置在此处修改
-export const pie_config = {
+export const pie_config_on = {
+    title : {
+      text: '流量类别分布',
+      subtext: '',
+      x:'center',
+      fontSize: 20
+      },
+      tooltip : {
+          trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+      },
+      legend: {
+          orient: 'vertical',
+          left: 'left',
+          data: ['chat','streaming','p2p']
+      },
     series:[{
-      name: '流量饼图',
+      name: '流量类别',
       type: 'pie',
-      radius: [0, 75],
-      center: ['50%', '50%'],
-      roseType: 'area',
+      radius : '65%',
+      center: ['50%', '45%'],
       itemStyle: {
-          borderRadius: 8
+          emphasis: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: 'rgba(0, 0, 0, 0.5)'
+        }
       },
       data: []
     }]
 }
 
-export const cata_config = {
-  xAxis: {
-    type: 'category',
-    data: ['name1','name2','name3']
-  },
-  yAxis: {
-    type: 'value' 
-  },
-  series: [{
-    data: [],
-    type: 'bar'
-  }]
+export const cata_config_on = {
+            title: {
+                text: '各类别流量数目',
+                x: '10%',
+                fontSize: 20
+            },
+            tooltip: {},
+            legend: {
+                data:['流量数目']
+            },
+            xAxis: {
+                data: ["chat","streaming","p2p"]
+            },
+            yAxis: {},
+            series: [{
+                name: '流量数目',
+                type: 'bar',
+                data: [5, 20, 36]
+            }]
+        };
+export const pie_config_off = {
+   title : {
+                        text: '流量类别分布',
+                        subtext: '',
+                        x:'center',
+                        fontSize: 20
+                    },
+                    tooltip : {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b} : {c} ({d}%)"
+                    },
+                    legend: {
+                        orient: 'vertical',
+                        left: 'left',
+                        data: ['chat', 'email', 'file', 'p2p', 'streaming', 'voip', 'vpn_chat',
+                                'vpn_email', 'vpn_file', 'vpn_p2p', 'vpn_streaming', 'vpn_voip']
+                    },
+                    series : [
+                        {
+                            name: '流量类别',
+                            type: 'pie',
+                            radius : '65%',
+                            center: ['50%', '45%'],
+                            data:[],
+                            itemStyle: {
+                                emphasis: {
+                                    shadowBlur: 10,
+                                    shadowOffsetX: 0,
+                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                }
+                            }
+                        }
+                    ]
+
 }
 
+export const cata_config_off = {
+           title: {
+                text: '各类别流量数目',
+                x: '10%',
+                fontSize: 20
+            },
+            tooltip: {},
+            legend: {
+                data:['流量数目']
+            },
+            xAxis: {
+                data: ["chat","email","file","p2p","streaming","voip","vpn_chat",
+                        "vpn_email","vpn_file","vpn_p2p","vpn_streaming","vpn_voip"]
+            },
+            yAxis: {},
+            series: [{
+                name: '流量数目',
+                type: 'bar',
+                data: [5, 20, 36, 10, 10, 20,5, 20, 36, 10, 10, 20]
+            }]
+}
 // 图表默认数据在此处设置
-export const pie_data_default = [
-  {value: 0, name:'name1'},
-  {value: 0, name:'name2'},
-  {value: 0, name:'name3'}
+export const pie_data_default_on = [
+  {value: 0, name:'chat'},
+  {value: 0, name:'streaming'},
+  {value: 0, name:'p2p'}
+]
+export const pie_data_default_off = [
+  {value: 0, name:'chat'},
+  {value: 0, name:'email'},
+  {value: 0, name:'file'},
+  {value: 0, name:'p2p'},
+  {value: 0, name:'streaming'},
+  {value: 0, name:'voip'},
+  {value: 0, name:'vpn_chat'},
+  {value: 0, name:'vpn_email'},
+  {value: 0, name:'vpn_file'},
+  {value: 0, name:'vpn_streaming'},
+  {value: 0, name:'vpn_voip'},
 ]
 
-export const cata_data_default = [
-  {value: 0, name:'name1'},
-  {value: 0, name:'name2'},
-  {value: 0, name:'name3'}
+export const cata_data_default_on = [
+  {value: 0, name:'chat'},
+  {value: 0, name:'streaming'},
+  {value: 0, name:'p2p'}
+]
+export const cata_data_default_off = [
+  {value: 0, name:'chat'},
+  {value: 0, name:'email'},
+  {value: 0, name:'file'},
+  {value: 0, name:'p2p'},
+  {value: 0, name:'streaming'},
+  {value: 0, name:'voip'},
+  {value: 0, name:'vpn_chat'},
+  {value: 0, name:'vpn_email'},
+  {value: 0, name:'vpn_file'},
+  {value: 0, name:'vpn_streaming'},
+  {value: 0, name:'vpn_voip'},
 ]
 
 // 设置数据方法

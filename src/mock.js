@@ -1,6 +1,6 @@
 import Mock from 'mockjs'
 
-// src_ip: '10.3.8.211', 
+// src_ip: '10.3.8.211',
 // dst_ip: '112.5.4.432',
 // src_port: '3000',
 // dst_port: '8009',
@@ -9,16 +9,16 @@ import Mock from 'mockjs'
 // 流量统计信息
 const statData = {
     details: {
-        'chart': 0.56,
+        'chat': 0.56,
         'streaming': 0.22,
-        'p-to-p': 0.32,
+        'p2p': 0.32,
     },
     total: 1000,
 }
-const listData = 
+const listData =
     [{
         Index: 1,
-        src_ip: '10.3.8.211', 
+        src_ip: '10.3.8.211',
         dst_ip: '112.5.4.432',
         src_port: '3000',
         dst_port: '8333',
@@ -26,7 +26,7 @@ const listData =
         classification: 'aaa',
     },{
         Index: 2,
-        src_ip: '102.111.33.4', 
+        src_ip: '102.111.33.4',
         dst_ip: '192.168.0.1',
         src_port: '8490',
         dst_port: '8000',
@@ -49,7 +49,7 @@ const searchData = {
         },
         records: [{
             Index: 1,
-            src_ip: '10.3.8.211', 
+            src_ip: '10.3.8.211',
             dst_ip: '112.5.4.432',
             src_port: '3000',
             dst_port: '8333',
