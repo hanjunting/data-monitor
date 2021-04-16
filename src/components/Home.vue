@@ -1,8 +1,10 @@
 <template>
   <div>
-    <button v-on:click="gotoTest">test mock data</button>
+    <!-- <button v-on:click="gotoTest">test mock data</button> -->
     <Navbar></Navbar>
-    <router-view/>
+    <keep-alive>
+      <router-view/>
+    </keep-alive>
   </div>
   
 </template>
