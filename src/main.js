@@ -7,13 +7,13 @@ import router from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import Navbar from '../src/components/Navbar.vue'
-import TableList from '../src/components/TableList.vue'
+// import TableList from '../src/components/TableList.vue'
 import './mock.js'
 Vue.config.productionTip = false
 
 Vue.use(ElementUI);
 Vue.component('Navbar', Navbar)
-Vue.component('Table',TableList)
+// Vue.component('Table',TableList)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

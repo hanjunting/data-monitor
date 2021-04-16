@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div>dynamic</div>
+<!--        <div>dynamic</div>-->
         <div>
             <el-input placeholder="源ip" type="text" v-model="inputData.src_ip" clearable></el-input>
             <el-input placeholder="源端口" type="text" v-model="inputData.src_port" clearable></el-input>
@@ -34,18 +34,18 @@
     // import * as echarts from 'echarts'
     import Figure from '../figure/figure.js'
     import { getStatData, getIPstream } from '../server/request.js'
-    import { 
-        pie_config, 
-        cata_config, 
-        pie_data_default, 
+    import {
+        pie_config,
+        cata_config,
+        pie_data_default,
         cata_data_default,
         setPieData,
         setCataData,
         } from '../figure/fig_config.js'
-    
+
 
     export default {
-            
+
         data() {
             return {
                 pie: null,
@@ -54,7 +54,7 @@
                 cataDomNode: null,
                 // 输入ip和端口信息
                 inputData: {
-                    src_ip: '', 
+                    src_ip: '',
                     dst_ip: '',
                     src_port: '',
                     dst_port: '',
@@ -80,7 +80,7 @@
             this.cata.setData(cata_data_default, setCataData);
         },
         methods: {
-            
+
 
             async startMonitor() {
                 await this.getMonitorState();
@@ -113,10 +113,10 @@
                     }catch(e){
                         console.log(e.message);
                     }
-                }else{ 
+                }else{
                     alert("请输入源ip和目标ip")
                 }
-                
+
             },
             renderFigure() {
                 this.pie.setData(this.pieData, setPieData);
