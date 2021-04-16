@@ -31,18 +31,22 @@
           </template>
             </el-card>
         </el-row>
-        <el-row style="height: 55%; margin-left: 20px; margin-top: 50px">
-          <el-col :span="12" style="width: 50%">
-            <template style="height: 100%">
+        <el-row style="height: 55%; margin-left: 7px; margin-top: 6px">
+          <el-col :span="12" style="width: 49%; margin-right: 2%;">
+            <el-card>
+              <template>
                <div id="fig_pie" style="height: 500px"></div>
               <keep-alive></keep-alive>
-            </template>
+             </template>
+            </el-card>
           </el-col>
-          <el-col :span="12" style="width: 50%">
+          <el-col :span="12" style="width: 49%;">
+            <el-card>
             <template style="height: 100%">
               <div id="fig_catagory" style="height: 500px"></div>
 <!--                <offlineTendency :sevenDate='sevenDate' :sevenDay='sevenDay'></offlineTendency>-->
             </template>
+            </el-card>
           </el-col>
         </el-row>
         <el-divider><i class=el-icon-notebook-1></i></el-divider>

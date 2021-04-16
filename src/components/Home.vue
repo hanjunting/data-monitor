@@ -1,9 +1,9 @@
 <template>
-  <div class="manage_page fillcontain">
+  <div class="manage_page fillcontain" style="background-color: powderblue">
     <el-container style="background-color: #e4e4e4;">
 	  <el-row>
 	    <el-col :span="4">
-        <el-image style="width: 100%; height: 99%"
+        <el-image style="width: 100%; height: 100%; margin-top: 6%"
         :src="require('../assets/bupt_head.png')">
         </el-image>
       </el-col>
@@ -16,10 +16,10 @@
 <!--      <el-drawer :direction="ltr" :visible.sync="true">-->
       <el-container>
       <el-col :span="4"  style="height: 100%; background-color: #545c64;">
-          <Navbar style="height: 1000px"></Navbar>
+          <Navbar style="height: 1050px"></Navbar>
       </el-col>
       <el-col :span="20" style="height: 100%">
-        <div>
+        <div class="divcss">
             <keep-alive>
               <router-view/>
             </keep-alive>
@@ -74,6 +74,11 @@ export default {
     text-align: center;
     font-size: 25px;
     }
+  .divcss{
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
   .time {
     font-size: 13px;
     color: #999;

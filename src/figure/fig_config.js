@@ -20,7 +20,7 @@ export const pie_config_on = {
       name: '流量类别',
       type: 'pie',
       radius : '65%',
-      center: ['50%', '45%'],
+      center: ['50%', '55%'],
       itemStyle: {
           emphasis: {
             shadowBlur: 10,
@@ -56,7 +56,7 @@ export const pie_config_off = {
    title : {
                         text: '流量类别分布',
                         subtext: '',
-                        x:'center',
+                        x:'53%',
                         fontSize: 20
                     },
                     tooltip : {
@@ -74,7 +74,7 @@ export const pie_config_off = {
                             name: '流量类别',
                             type: 'pie',
                             radius : '65%',
-                            center: ['50%', '45%'],
+                            center: ['60%', '55%'],
                             data:[],
                             itemStyle: {
                                 emphasis: {
@@ -125,14 +125,15 @@ export const pie_data_default_off = [
   {value: 0, name:'vpn_chat'},
   {value: 0, name:'vpn_email'},
   {value: 0, name:'vpn_file'},
+  {value: 0, name:'vpn_p2p'},
   {value: 0, name:'vpn_streaming'},
   {value: 0, name:'vpn_voip'},
 ]
 
 export const cata_data_default_on = [
-  {value: 0, name:'chat'},
-  {value: 0, name:'streaming'},
-  {value: 0, name:'p2p'}
+  {value: 125, name:'chat'},
+  {value: 70, name:'streaming'},
+  {value: 203, name:'p2p'}
 ]
 export const cata_data_default_off = [
   {value: 0, name:'chat'},
@@ -144,6 +145,7 @@ export const cata_data_default_off = [
   {value: 0, name:'vpn_chat'},
   {value: 0, name:'vpn_email'},
   {value: 0, name:'vpn_file'},
+  {value: 0, name:'vpn_p2p'},
   {value: 0, name:'vpn_streaming'},
   {value: 0, name:'vpn_voip'},
 ]

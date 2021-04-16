@@ -58,25 +58,29 @@
           </template>
         </el-row>
 <!--        <el-divider></el-divider>-->
-        <el-row style="height: 55%; margin-left: 20px; margin-top: 50px">
-          <el-col :span="12" style="width: 50%">
+        <el-row style="height: 55%; margin-left: 7px; margin-top: 6px">
+          <el-col :span="12" style="width: 49%; margin-right: 2%;">
+            <el-card>
             <template style="height: 100%">
 <!--               <visitorPie :pieData="pieData"></visitorPie>-->
-              <div id="fig_pie" style="height: 500px"></div>
+              <div id="fig_pie" style="height: 500px;%"></div>
               <keep-alive></keep-alive>
             </template>
+              </el-card>
           </el-col>
-          <el-col :span="12" style="width: 50%">
+          <el-col :span="12" style="width: 49%;">
+            <el-card>
             <template style="height: 100%">
               <div id="fig_catagory" style="height: 500px"></div>
 <!--                <tendency :sevenDate='sevenDate' :sevenDay='sevenDay'></tendency>-->
             </template>
+              </el-card>
           </el-col>
         </el-row>
         <el-divider><i class=el-icon-notebook-1></i></el-divider>
-        <el-row style="height: 50%">
+        <el-row style="height: 50%; alignment: center">
           <template>
-            <el-table :data="listData" ref="multipleTable" border stripe style="margin-left: 40px;width: 90%" height="250">
+            <el-table :data="listData" ref="multipleTable" border stripe style="margin-left: 40px;width: 90%; alignment: center" height="250">
             <el-table-column prop="index"  label="编号"></el-table-column>
             <el-table-column prop="src_ip"  label="源IP地址"></el-table-column>
             <el-table-column prop="dst_ip"  label="目的IP地址"></el-table-column>
