@@ -8,12 +8,28 @@ import Mock from 'mockjs'
 
 // 流量统计信息
 const statData = {
-    details: {
-        'chat': 0.56,
-        'streaming': 0.22,
-        'p2p': 0.32,
+    statDetails: {
+        'chat': 560,
+        'streaming': 220,
+        'p2p': 320,
     },
-    total: 1000,
+    tableData: [{
+        Index: 1,
+        src_ip: '10.3.8.211',
+        dst_ip: '112.5.4.432',
+        src_port: '3000',
+        dst_port: '8333',
+        proto_type: 'TCP',
+        classification: 'aaa',
+      },{
+        Index: 2,
+        src_ip: '102.111.33.4',
+        dst_ip: '192.168.0.1',
+        src_port: '8490',
+        dst_port: '8000',
+        proto_type: 'UDP',
+        classification: 'bbb',
+    }]
 }
 const listData =
     [{

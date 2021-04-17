@@ -1,20 +1,6 @@
 <template>
 	<div class="manage_page fillcontain">
 		<el-row style="height: 100%;">
-<!--	  	<el-col :span="4"  style="min-height: 100%; background-color: #545c64;">-->
-<!--				<el-menu router :default-active="this.$route.path"-->
-<!--            background-color="#545c64"-->
-<!--            text-color="#fff"-->
-<!--            active-text-color="#ffd04b">-->
-<!--          <el-image style="width: 100%; height: 99%; background-color: #e4e4e4"-->
-<!--          :src="require('../assets/bupt_head.png')">-->
-<!--          </el-image>-->
-<!--					<el-menu-item index="/"><i class="el-icon-menu"></i>首页</el-menu-item>-->
-<!--          <el-menu-item index="/dashboard"><i class="el-icon-s-unfold"></i>在线检测</el-menu-item>-->
-<!--          <el-menu-item index="/offline"><i class="el-icon-s-unfold"></i>离线检测</el-menu-item>-->
-<!--          <el-menu-item><i class="el-icon-copy-document"></i>模型展示</el-menu-item>-->
-<!--				</el-menu>-->
-<!--			</el-col>-->
 			<el-col style="height: 100%;overflow: auto;">
 <!--        <h1>在线流量分类</h1>-->
         <el-row style="height: 150px; "> <!--background-color: #E6E6FA-->
@@ -57,7 +43,7 @@
           </el-card>
           </template>
         </el-row>
-<!--        <el-divider></el-divider>-->
+
         <el-row style="height: 55%; margin-left: 20px; margin-top: 50px">
           <el-col :span="12" style="width: 50%">
             <template style="height: 100%">
@@ -75,6 +61,7 @@
         </el-row>
         <el-divider><i class=el-icon-notebook-1></i></el-divider>
         <el-row style="height: 50%">
+          <!-- <div>{{listData}}</div> -->
           <template>
             <el-table :data="listData" ref="multipleTable" border stripe style="margin-left: 40px;width: 90%" height="250">
             <el-table-column prop="index"  label="编号"></el-table-column>
@@ -93,7 +80,6 @@
 </template>
 
 <script>
-    // import * as echarts from 'echarts'
     import Figure from '../figure/figure.js'
     import { getStatData, getIPstream } from '../server/request.js'
     import {
@@ -104,12 +90,9 @@
       setPieData,
       setCataData,
     } from '../figure/fig_config.js'
-    // import visitorPie from "../components/visitorPie"
-    // import tendency from "../components/tendency"
-
+    // import { setTimer } from '../utils/utils'
 
     export default {
-
         data() {
             return {
                 pie: null,
@@ -141,6 +124,7 @@
                 catagoryData:[],
                 // 表格信息
                 listData: [],
+                statData: []
             }
         },
         mounted() {
@@ -158,63 +142,54 @@
           // tendency,
         },
         methods: {
-
+            async setTimer(fun, delay) {
+              const f = async () => {
+                await fun();
+                this.timer = setTimeout(async() => {
+                  await f();
+                },delay);
+              }
+              await f();
+            },
 
             async startMonitor() {
-                await this.getMonitorState();
-                this.renderFigure();
-                await this.getTableData();
-            },
-
-            async getMonitorState() {
-                console.log('search!');
-                // TODO: 确认默认ip和默认端口
-                const {src_ip, dst_ip} = this.inputData;
+              const {src_ip, dst_ip} = this.inputData;
                 if (src_ip && dst_ip) {
-                    try{
-                        const res = await getStatData(this.inputData);
-                        console.log('res----------',res);
-                        const { status, data } = res;
-                        const { details, total } = data;
-                        if (status === 200) {
-                            Object.keys(details).forEach(item => {
-                                this.pieData.push({
-                                    name: item,
-                                    value: details[item]*100
-                                });
-                                this.catagoryData.push({
-                                    name: item,
-                                    value: details[item]*total
-                                });
-                            })
-                        }
-                    }catch(e){
-                        console.log(e.message);
-                    }
-                }else{
+                  this.setTimer(async () => {
+                    await this.getMonitorData();
+                    this.renderFigure();
+                  }, 2000);
+                } else{
                     alert("请输入源ip和目标ip")
                 }
-
+             
             },
-            renderFigure() {
-                this.pie.setData(this.pieData, setPieData);
-                this.cata.setData(this.catagoryData, setCataData);
-            },
-            async getTableData() {
-                const f = async() => {
-                    const res = await getIPstream(this.inputData);
-                    const { status, data } = res;
-                    // console.log(data)
-                        if (status === 200) {
-                            this.listData = data.concat(this.listData);
-                        } else {
-                            new Throw(status);
-                        }
-                    this.timer = setTimeout(() => {
-                        f();
-                    },1000)
+          
+            async getMonitorData() {
+              let res = null;
+              try{
+                res = await getStatData(this.inputData);
+                const { status, data } = res;
+                if (status === 200) {
+                  const { statDetails, tableData } = data;
+                  // 表格
+                  this.listData = tableData.concat(this.listData);
+                  // 统计图
+                  this.statData = [];
+                  Object.keys(statDetails).forEach(item => {
+                      this.statData.push({
+                          name: item,
+                          value: statDetails[item]
+                      });
+                  })
                 }
-                await f();
+              } catch(e) {}
+            },
+
+            renderFigure() {
+                console.log('render', this.statData)
+                this.pie.setData(this.statData, setPieData);
+                this.cata.setData(this.statData, setCataData);
             },
 
             stop() {
@@ -235,106 +210,6 @@
 
 
 </script>
-<!--<script>-->
-<!--    // import headTop from '../components/headTop'-->
-<!--    import axios from 'axios'-->
-<!--    import visitorPie from "../components/visitorPie"-->
-<!--    import tendency from "../components/tendency"-->
-<!--    export default {-->
-<!--      data() {-->
-<!--        return {-->
-<!--          src_ip: '',-->
-<!--          dst_ip: '',-->
-<!--          src_port: '',-->
-<!--          dst_port: '',-->
-<!--          proto_type:'',-->
-<!--          subject: '在线',-->
-<!--          pieData: {},-->
-<!--          tableData: [{-->
-<!--            ip: '10.3.8.211',-->
-<!--            type: 'chat',-->
-<!--            volume: '20%'-->
-<!--          }, {-->
-<!--            ip: '192.168.0.1',-->
-<!--            type: 'e-mail',-->
-<!--            volume: '80%'-->
-<!--          }],-->
-<!--          options: [-->
-<!--          {-->
-<!--            value: '选项一',-->
-<!--            label: '127.0.0.1'-->
-<!--          }-->
-<!--          ],-->
-<!--          proto_options: [{-->
-<!--            value: 'op1',-->
-<!--            label: 'TCP'-->
-<!--          }, {-->
-<!--            value: 'op2',-->
-<!--            label: 'UDP'-->
-<!--          }-->
-<!--          ],-->
-<!--          value:'',-->
-<!--          sevenDay: [],-->
-<!--    			sevenDate: [[],[],[]],-->
-<!--        }-->
-<!--      },-->
-<!--      components: {-->
-<!--        // headTop,-->
-<!--        visitorPie,-->
-<!--        tendency,-->
-<!--      },-->
-<!--      mounted() {-->
-<!--        this.initData();-->
-<!--        this.sevenDay.push('chat');-->
-<!--        this.sevenDay.push('e-mail');-->
-<!--        this.sevenDay.push('flow');-->
-<!--        this.getSevenDate();-->
-<!--        console.log(this.src_ip)-->
-<!--        console.log('cdc')-->
-<!--      },-->
-<!--      methods: {-->
-<!--        start() {-->
-<!--          console.log(this.src_ip);-->
-<!--          let data = {'src_ip': this.src_ip}-->
-<!--          console.log(data)-->
-<!--          axios.post('/api/online_classify/start/', data)   //**************************-->
-<!--          .then(response => {-->
-<!--            this.pieData = response.data['pie']-->
-<!--            this.tableData = response.data['records']-->
-<!--            console.log(this.pieData)-->
-<!--            console.log(this.tableData)-->
-<!--          })-->
-<!--          .catch(function (error) {-->
-<!--            console.log(error)-->
-<!--          });-->
-<!--        },-->
-<!--        stop() {-->
-<!--          axios.post('/api/online_classify/stop/')   //**************************-->
-<!--          .catch(function (error) {-->
-<!--            console.log(error)-->
-<!--          });-->
-<!--        },-->
-<!--        reset() {-->
-<!--          axios.post('/api/online_classify/reset/')   //**************************-->
-<!--          .catch(function (error) {-->
-<!--            console.log(error)-->
-<!--          });-->
-<!--        },-->
-<!--        async initData() {-->
-<!--          this.pieData = {-->
-<!--            'chat': 5,-->
-<!--            'streaming':10,-->
-<!--            'p2p':36}-->
-<!--        },-->
-<!--        getSevenDate() {-->
-<!--          this.sevenDate[0].push(10,12,23);-->
-<!--          this.sevenDate[1].push(23,45,63);-->
-<!--          this.sevenDate[2].push(43,12,31);-->
-<!--        }-->
-<!--      }-->
-<!--    }-->
-<!--</script>-->
-
 
 <style lang="less" scoped>
 	@import '../style/mixin';
